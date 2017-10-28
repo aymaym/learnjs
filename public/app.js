@@ -26,10 +26,10 @@ learnjs.problemView = function(data) {
 
   function checkAnswerClick() {
     if (checkAnswer()) {
-      resultFlash.text('Collect!');
+      learnjs.flashElement(resultFlash, 'Collect!');
     }
     else {
-      resultFlash.text('Incollect!');
+      learnjs.flashElement(resultFlash, 'Incollect!');
     }
     return false;
   }
@@ -66,4 +66,11 @@ learnjs.applyObject = function(obj, elem) {
   for (var key in obj) {
     elem.find('[data-name="' + key + '"]').text(obj[key]);
   }
+};
+
+learnjs.flashElement = function(elem, content) {
+  elem.fadeOut('fast', function() {
+    elem.html(content);
+    elem.fadeIn();
+  });
 };
