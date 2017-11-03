@@ -23,6 +23,7 @@ learnjs.showView = function (hash) {
   var hashParts = hash.split('-');
   var viewFn = routes[hashParts[0]];
   if(viewFn) {
+    learnjs.triggerEvent('removingView', []);
     $('.view-container').empty().append(viewFn(hashParts[1]));
   }
   
@@ -57,11 +58,18 @@ learnjs.problemView = function(data) {
   view.find('.check-btn').click(checkAnswerClick);
   view.find('.title').text('Problem #' + problemNumber);
   learnjs.applyObject(problemData, view);
+
+  if (problemNumber < learnjs.problems.length) {
+    var buttonItem = learnjs.template('skip-btn');
+    buttonItem.find('a').attr('href', '#problem-' + (problemNumber + 1));
+    $('.nav-list').append(buttonItem);
+    view.bind('removingView', function() {
+      buttonItem.remove();
+    });
+  }
   return view;
 
 };
-
-
 
 learnjs.appOnReady = function() {
   window.onhashchange = function() {
@@ -98,4 +106,8 @@ learnjs.buildCorrectFlash = function(problemNum) {
     link.attr("You're Finished!");
   }
   return correctFlash;
+};
+
+learnjs.triggerEvent = function(name, args) {
+  $('.view-container>*').trigger(name, args);
 };
